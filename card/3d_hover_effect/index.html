@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3d card hover effect</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+  </head>
+  <body>
+    <div id="element">
+      <div id="card">
+        <div id="gradient"></div>
+      </div>
+    </div>
+    <script>
+      const element = document.getElementById("element");
+      const card = document.getElementById("card");
+      const gradient = document.getElementById("gradient");
+
+      let { x, y, width, height } = element.getBoundingClientRect();
+
+      const mousemove = (e) => {
+        const left = e.clientX - x;
+        const top = e.clientY - y;
+
+        const centerX = left - width / 2;
+        const centerY = top - height / 2;
+
+        const d = Math.sqrt(centerX ** 2 + centerY ** 2);
+
+        card.style.transform = `
+          rotate3d(
+            ${-centerY / 100}, ${-centerX / 100}, 0, ${d / 10}deg
+          )
+        `;
+
+        card.style.boxShadow = `
+          ${-centerX / 5}px ${-centerY / 5}px 10px rgba(0, 0, 0, 0.2)
+        `;
+
+        gradient.style.backgroundImage = `
+          radial-gradient(
+            circle at ${left}px ${top}px, #00000010, #ffffff00, #ffffff70
+          )
+        `;
+      };
+
+      element.addEventListener("mouseenter", () => {
+        element.addEventListener("mousemove", mousemove);
+      });
+
+      element.addEventListener("mouseleave", () => {
+        element.removeEventListener("mousemove", mousemove);
+        card.style.boxShadow = "";
+        card.style.transform = "";
+        gradient.style.backgroundImage = "";
+      });
+    </script>
+  </body>
+</html>
